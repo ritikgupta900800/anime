@@ -1,0 +1,259 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anime Walls</title>
+  <meta name="description" content="Free anime-style wallpapers. Browse, search, and download HD backgrounds." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%231a1a1a'/%3E%3Cpath d='M50 18c14 0 24 8 24 22 0 9-5 15-11 17 4 1 8 5 8 11 0 9-8 14-21 14S29 77 29 68c0-6 4-10 8-11-6-2-11-8-11-17 0-14 10-22 24-22z' fill='%23fff'/%3E%3C/svg%3E" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Masonry columns for a Pinterest-like grid */
+    .masonry { column-count: 1; column-gap: 1rem; }
+    @media (min-width: 640px) { .masonry { column-count: 2; } }
+    @media (min-width: 1024px) { .masonry { column-count: 3; } }
+    .masonry-item { break-inside: avoid; margin-bottom: 1rem; }
+    /* Hide scrollbars for the chips row */
+    .chips::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body class="bg-neutral-950 text-neutral-100 min-h-screen">
+  <!-- Header -->
+  <header class="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/70 border-b border-neutral-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+      <div class="shrink-0 rounded-2xl bg-neutral-800 p-2">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6" fill="currentColor"><path d="M12 2c2.8 0 5 2.2 5 5 0 1.2-.4 2.2-1 3 2.4.2 4 1.8 4 4 0 2.4-2.1 4-5 4H9c-2.9 0-5-1.6-5-4 0-2.2 1.6-3.8 4-4-.6-.8-1-1.8-1-3 0-2.8 2.2-5 5-5z"/></svg>
+      </div>
+      <div class="flex-1">
+        <h1 class="text-xl sm:text-2xl font-semibold">Anime Walls</h1>
+        <p class="text-sm text-neutral-400 hidden sm:block">Browse • Search • Download HD wallpapers</p>
+      </div>
+      <a href="#upload-info" class="text-xs sm:text-sm px-3 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 border border-neutral-700">How to add images</a>
+    </div>
+  </header>  <!-- Controls -->  <section class="max-w-7xl mx-auto px-4 sm:px-6 mt-6">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <div class="relative flex-1">
+        <input id="search" type="text" placeholder="Search by title, series or tag…" class="w-full bg-neutral-900 border border-neutral-800 rounded-2xl px-4 py-3 pr-10 outline-none focus:ring-2 focus:ring-indigo-500" />
+        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500">⌕</span>
+      </div>
+      <div class="flex items-center gap-2 text-sm">
+        <label class="flex items-center gap-2 px-3 py-2 rounded-xl bg-neutral-900 border border-neutral-800 cursor-pointer select-none">
+          <input id="safeOnly" type="checkbox" class="accent-indigo-500">
+          <span>Only 4K</span>
+        </label>
+        <button id="clearFilters" class="px-3 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 border border-neutral-700">Clear</button>
+      </div>
+    </div><div class="chips mt-4 flex gap-2 overflow-x-auto pb-1">
+  <!-- category chips will be injected here -->
+  <div id="chips" class="flex gap-2"></div>
+</div>
+
+  </section>  <!-- Gallery -->  <main class="max-w-7xl mx-auto px-4 sm:px-6 mt-6">
+    <div id="grid" class="masonry"></div><!-- Empty state -->
+<div id="empty" class="hidden text-center py-20 text-neutral-400">No wallpapers found. Try different filters.</div>
+
+  </main>  <!-- Lightbox Modal -->  <div id="lightbox" class="fixed inset-0 hidden items-center justify-center bg-black/80 z-50 p-4">
+    <div class="relative max-w-6xl w-full">
+      <button id="closeLightbox" class="absolute -top-10 right-0 px-3 py-2 rounded-xl bg-neutral-800 border border-neutral-700">Close ✕</button>
+      <img id="lightboxImg" src="" alt="Wallpaper" class="w-full h-auto rounded-2xl shadow-2xl border border-neutral-800" />
+      <div class="mt-3 flex flex-wrap items-center gap-2">
+        <a id="downloadBtn" href="#" download class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white">Download</a>
+        <span id="meta" class="text-sm text-neutral-400"></span>
+      </div>
+    </div>
+  </div>  <!-- Footer / How to add images -->  <footer id="upload-info" class="max-w-7xl mx-auto px-4 sm:px-6 mt-16 mb-24">
+    <div class="bg-neutral-900/60 border border-neutral-800 rounded-2xl p-5 sm:p-8">
+      <h2 class="text-lg font-semibold mb-2">Add your wallpapers</h2>
+      <ol class="list-decimal ml-5 space-y-1 text-neutral-300 text-sm">
+        <li>Grab direct image links (e.g., from your own hosting, Google Drive direct links, or any CDN you control).</li>
+        <li>Edit the <code>SAMPLE_WALLPAPERS</code> list in this file — add <code>title</code>, <code>series</code>, <code>tags</code>, <code>url</code>, and <code>res</code> (like <code>3840x2160</code>).</li>
+        <li>Save as <code>index.html</code>. Host on GitHub Pages, Netlify, or Vercel.</li>
+        <li>Copyright tip: Only upload images you own or have permission to share.</li>
+      </ol>
+    </div>
+  </footer>  <script>
+    // —— DATA: Replace with your real wallpapers ——
+    const SAMPLE_WALLPAPERS = [
+      {
+        title: "Shadow Ninja",
+        series: "Original Anime Style",
+        tags: ["ninja", "katana", "dark"],
+        url: "https://placehold.co/1920x1080/png?text=Shadow+Ninja",
+        res: "1920x1080"
+      },
+      {
+        title: "Lightning Shonen",
+        series: "Shonen Vibes",
+        tags: ["electric", "speed", "hero"],
+        url: "https://placehold.co/2560x1440/png?text=Lightning+Shonen",
+        res: "2560x1440"
+      },
+      {
+        title: "Demon Bladeswoman",
+        series: "Demon Huntress",
+        tags: ["sword", "moon", "kimono"],
+        url: "https://placehold.co/3840x2160/png?text=Demon+Bladeswoman",
+        res: "3840x2160"
+      },
+      {
+        title: "Titanic Walls",
+        series: "Colossal Era",
+        tags: ["titan", "city", "wall"],
+        url: "https://placehold.co/3840x2160/png?text=Titanic+Walls",
+        res: "3840x2160"
+      },
+      {
+        title: "Pirate King Dream",
+        series: "Sea Adventure",
+        tags: ["pirate", "sea", "ship"],
+        url: "https://placehold.co/2560x1440/png?text=Pirate+King+Dream",
+        res: "2560x1440"
+      },
+      {
+        title: "Uchiha Flame (Fan Art)",
+        series: "Shinobi Clan",
+        tags: ["itachi", "sharingan", "red"],
+        url: "https://placehold.co/3840x2160/png?text=Uchiha+Flame",
+        res: "3840x2160"
+      }
+    ];
+
+    // —— CONFIG ——
+    const CATEGORIES = [
+      { id: "all", name: "All" },
+      { id: "original", name: "Original" },
+      { id: "shonen", name: "Shonen" },
+      { id: "samurai", name: "Samurai" },
+      { id: "demon", name: "Demon" },
+      { id: "pirate", name: "Pirate" },
+      { id: "mecha", name: "Mecha" },
+    ];
+
+    // Map sample items to categories by a simple heuristic (you can replace with explicit `category` field)
+    const inferCategory = (w) => {
+      const t = (w.title + " " + w.series + " " + w.tags.join(" ")).toLowerCase();
+      if (t.includes("demon")) return "demon";
+      if (t.includes("pirate")) return "pirate";
+      if (t.includes("ninja") || t.includes("katana") || t.includes("samurai")) return "samurai";
+      if (t.includes("mecha")) return "mecha";
+      if (t.includes("shonen")) return "shonen";
+      return "original";
+    };
+
+    // —— STATE ——
+    let state = {
+      q: "",
+      cat: "all",
+      only4k: false,
+      data: SAMPLE_WALLPAPERS.map(w => ({ ...w, category: inferCategory(w) }))
+    };
+
+    // —— RENDER HELPERS ——
+    const chipsEl = document.getElementById('chips');
+    const gridEl = document.getElementById('grid');
+    const emptyEl = document.getElementById('empty');
+
+    function renderChips() {
+      chipsEl.innerHTML = '';
+      CATEGORIES.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'px-3 py-2 rounded-xl border ' + (state.cat === cat.id
+          ? 'bg-indigo-600 border-indigo-500 text-white'
+          : 'bg-neutral-900 border-neutral-800 hover:bg-neutral-800');
+        btn.textContent = cat.name;
+        btn.onclick = () => { state.cat = cat.id; render(); };
+        chipsEl.appendChild(btn);
+      });
+    }
+
+    function matchesFilters(w) {
+      const term = state.q.trim().toLowerCase();
+      const inCat = state.cat === 'all' || w.category === state.cat;
+      const inSearch = !term || [w.title, w.series, w.tags.join(' ')].join(' ').toLowerCase().includes(term);
+      const only4k = !state.only4k || w.res.includes('3840x2160') || w.res.includes('4096x2160') || w.res.includes('5120x2880');
+      return inCat && inSearch && only4k;
+    }
+
+    function cardTemplate(w, idx) {
+      return `
+        <article class="masonry-item group relative rounded-2xl overflow-hidden border border-neutral-800 bg-neutral-900/40">
+          <img src="${w.url}" alt="${w.title}" loading="lazy" class="w-full h-auto block group-hover:opacity-90 transition"/>
+          <div class="p-3 flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <h3 class="font-medium truncate">${w.title}</h3>
+              <p class="text-xs text-neutral-400 truncate">${w.series} • ${w.res}</p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button data-idx="${idx}" class="open-btn px-3 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 border border-neutral-700">View</button>
+              <a href="${w.url}" download class="px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white">Save</a>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderGrid(items) {
+      gridEl.innerHTML = items.map((w, i) => cardTemplate(w, i)).join('');
+      emptyEl.classList.toggle('hidden', items.length !== 0);
+      document.querySelectorAll('.open-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => openLightbox(items[Number(btn.dataset.idx)]));
+      });
+    }
+
+    function render() {
+      const items = state.data.filter(matchesFilters);
+      renderGrid(items);
+    }
+
+    // —— LIGHTBOX ——
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const metaEl = document.getElementById('meta');
+
+    function openLightbox(w) {
+      lightboxImg.src = w.url;
+      downloadBtn.href = w.url;
+      metaEl.textContent = `${w.title} • ${w.series} • ${w.res}`;
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+    }
+
+    document.getElementById('closeLightbox').addEventListener('click', () => {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      lightboxImg.src = '';
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        lightbox.classList.add('hidden');
+        lightbox.classList.remove('flex');
+        lightboxImg.src = '';
+      }
+    });
+
+    // —— CONTROLS ——
+    document.getElementById('search').addEventListener('input', (e) => {
+      state.q = e.target.value;
+      render();
+    });
+
+    document.getElementById('safeOnly').addEventListener('change', (e) => {
+      state.only4k = e.target.checked;
+      render();
+    });
+
+    document.getElementById('clearFilters').addEventListener('click', () => {
+      state.q = '';
+      state.cat = 'all';
+      state.only4k = false;
+      document.getElementById('search').value = '';
+      document.getElementById('safeOnly').checked = false;
+      render();
+    });
+
+    // Init
+    renderChips();
+    render();
+  </script></body>
+</html>
